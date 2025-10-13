@@ -1,15 +1,7 @@
-import { MovieCard } from "./commponents/MovieCard";
+import MovieBox from "./commponents/MovieCard.js";
 
 const App = () => {
-  return (
-    <div className=" bg-black flex">
-      <MovieCard />
-      <MovieCard />
-      <MovieCard />
-      <MovieCard />
-      <MovieCard />
-    </div>
-  );
+  return <MovieBox />;
 };
 
 export default App;

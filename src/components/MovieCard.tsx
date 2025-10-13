@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { api, api1 } from "../api/api";
+import { genreApi, movieApi } from "../api/api";
+import { Link } from "react-router-dom";
 import {
   Search,
   Star,
@@ -30,36 +31,39 @@ interface MovieSectionProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => (
-  <div className="group relative  bg-slate-800  rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full">
-    <div className="relative h-90 overflow-hidden">
-      <img
-        src={movie.image}
-        alt={movie.title}
-        className="w-full h-full object-center group-hover:scale-105 transition-transform duration-500"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      <div className="absolute top-3 right-3 bg-yellow-500 text-gray-900 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
-        <Star className="w-4 h-4 fill-current" />
-        {movie.vote_average.toFixed(1)}
+  <Link to={`/movie/${movie.id}`}>
+    <div className="group relative  bg-slate-800  rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full">
+      <div className="relative h-90 overflow-hidden">
+        <img
+          src={movie.image}
+          alt={movie.title}
+          className="w-full h-full object-center group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute top-3 right-3 bg-yellow-500 text-gray-900 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+          <Star className="w-4 h-4 fill-current" />
+          {movie.vote_average.toFixed(1)}
+        </div>
       </div>
-    </div>
-    <div className="p-5">
-      <h3 className="text-xl font-bold text-neutral-100 mb-2 line-clamp-1">
-        {movie.title}
-      </h3>
-      <div className="flex items-center gap-2 text-gray-300 text-sm mb-3 font-semibold">
-        <span>{movie.release_date.substring(0, 4)}</span>
-        <span>•</span>
-        <span className="line-clamp-1">{movie.genre}</span>
+      <div className="p-5">
+        <h3 className="text-xl font-bold text-neutral-100 mb-2 line-clamp-1">
+          {movie.title}
+        </h3>
+        <div className="flex items-center gap-2 text-gray-300 text-sm mb-3 font-semibold">
+          <span>{movie.release_date.substring(0, 4)}</span>
+          <span>•</span>
+          <span className="line-clamp-1">{movie.genre}</span>
+        </div>
+        <p className="text-gray-400 text-sm line-clamp-2 mb-4">
+          {movie.overview}
+        </p>
+
+        <button className="w-full bg-gradient-to-r from-gray-500 via-gray-600 to-gray-500 hover:from-gray-700 hover:via-gray-700 hover:to-gray-700 text-neutral-100 font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">
+          Read More
+        </button>
       </div>
-      <p className="text-gray-400 text-sm line-clamp-2 mb-4">
-        {movie.overview}
-      </p>
-      <button className="w-full bg-gradient-to-r from-gray-500 via-gray-600 to-gray-500 hover:from-gray-700 hover:via-gray-700 hover:to-gray-700 text-neutral-100 font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">
-        Read More
-      </button>
-    </div>
-  </div>
+    </div>{" "}
+  </Link>
 );
 
 const MovieSection: React.FC<MovieSectionProps> = ({
@@ -72,7 +76,7 @@ const MovieSection: React.FC<MovieSectionProps> = ({
       <Icon className="w-8 h-8 text-neutral-300" />
       <h2 className="text-3xl font-bold text-neutral-300">{title}</h2>
     </div>
-    <div className="flex gap-6 overflow-x-auto pb-4">
+    <div id="section" className="flex gap-5 overflow-x-auto pb-4">
       {movies.map((movie: Movie) => (
         <div key={movie.id} className="flex-none w-72">
           <MovieCard movie={movie} />
@@ -89,7 +93,7 @@ const MovieBox: React.FC = () => {
   const [upcoming, setUpcoming] = useState([]);
 
   useEffect(() => {
-    api1.get("/list").then((res) => {
+    genreApi.get("/list").then((res) => {
       const genres = res.data.genres;
 
       const genreMap: Record<number, string> = {};
@@ -97,7 +101,7 @@ const MovieBox: React.FC = () => {
         genreMap[g.id] = g.name;
       });
 
-      api.get("/top_rated").then((res) => {
+      movieApi.get("/top_rated").then((res) => {
         console.log(res.data.results);
         const moviesWithGenre = res.data.results.map((movie: any) => ({
           ...movie,
@@ -107,7 +111,7 @@ const MovieBox: React.FC = () => {
         setTopRatedMovies(moviesWithGenre);
       });
 
-      api.get("/upcoming").then((res) => {
+      movieApi.get("/upcoming").then((res) => {
         const moviesWithGenre = res.data.results.map((movie: any) => ({
           ...movie,
           genre: movie.genre_ids.map((id: number) => genreMap[id]).join(", "),
@@ -116,7 +120,7 @@ const MovieBox: React.FC = () => {
         setUpcoming(moviesWithGenre);
       });
 
-      api.get("/popular").then((res) => {
+      movieApi.get("/popular").then((res) => {
         const moviesWithGenre = res.data.results.map((movie: any) => ({
           ...movie,
           genre: movie.genre_ids.map((id: number) => genreMap[id]).join(", "),
@@ -124,7 +128,7 @@ const MovieBox: React.FC = () => {
         }));
         setPopularMovies(moviesWithGenre);
       });
-      api.get("/now_playing").then((res) => {
+      movieApi.get("/now_playing").then((res) => {
         const moviesWithGenre = res.data.results.map((movie: any) => ({
           ...movie,
           genre: movie.genre_ids.map((id: number) => genreMap[id]).join(", "),
@@ -134,10 +138,10 @@ const MovieBox: React.FC = () => {
       });
     });
   }, []);
-
+  // const [searchMovie, setSearchMovie] = useState([]);
+  // const [searchString, setSearchString] = useState("");
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -158,7 +162,7 @@ const MovieBox: React.FC = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-3 py-8">
         <MovieSection title="Latest Releases" icon={Calendar} movies={latest} />
         <MovieSection
           title="Top Rated Movies"

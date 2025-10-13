@@ -159,11 +159,7 @@ const MovieBox: React.FC = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        <MovieSection
-          title="Latest Releases"
-          icon={Calendar}
-          movies={upcoming}
-        />
+        <MovieSection title="Latest Releases" icon={Calendar} movies={latest} />
         <MovieSection
           title="Top Rated Movies"
           icon={Star}

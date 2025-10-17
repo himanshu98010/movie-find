@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { genreApi, movieApi } from "../api/api";
+import { genreApi, movieApi, searchApi } from "../api/api";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -91,6 +91,9 @@ const MovieBox: React.FC = () => {
   const [popularMovies, setPopularMovies] = useState([]);
   const [latest, setlatest] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     genreApi.get("/list").then((res) => {
@@ -138,8 +141,34 @@ const MovieBox: React.FC = () => {
       });
     });
   }, []);
-  // const [searchMovie, setSearchMovie] = useState([]);
-  // const [searchString, setSearchString] = useState("");
+  const handleSearch = async () => {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) {
+      setSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const res = await searchApi.get("/movie", { params: { query: trimmed } });
+      const results = res.data.results || [];
+      setSearchResults(
+        results.map((m: any) => ({
+          ...m,
+          image: m.poster_path
+            ? `https://image.tmdb.org/t/p/w500${m.poster_path}`
+            : "",
+        }))
+      );
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900">
       <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
@@ -151,18 +180,35 @@ const MovieBox: React.FC = () => {
                 MovieBox
               </h1>
             </div>
-            <div className="flex justify-center items-center gap-2">
+            <div className="flex items-center gap-2 w-full max-w-md">
               <input
-                className="w-50 h-8 px-4 py-2 rounded-2xl text-neutral-300 border-solid border-neutral-400 border-2"
-                placeholder="Search Movies"
+                className="flex-1 h-10 px-4 rounded-2xl text-neutral-200 bg-gray-800/70 border border-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                placeholder="Search movies..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
-              <Search size={26} className="text-neutral-300" />
+              <button
+                onClick={handleSearch}
+                className="inline-flex items-center justify-center rounded-2xl h-10 px-4 bg-gray-700 hover:bg-gray-600 text-neutral-100 transition-colors disabled:opacity-60"
+                disabled={isSearching}
+                aria-label="Search"
+              >
+                <Search size={20} className="text-neutral-200" />
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-3 py-8">
+      <main className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
+        {searchResults.length > 0 && (
+          <MovieSection
+            title="Search Results"
+            icon={Search}
+            movies={searchResults as any}
+          />
+        )}
         <MovieSection title="Latest Releases" icon={Calendar} movies={latest} />
         <MovieSection
           title="Top Rated Movies"

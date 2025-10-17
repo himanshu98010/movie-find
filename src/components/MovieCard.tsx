@@ -180,7 +180,7 @@ const MovieBox: React.FC = () => {
                 MovieBox
               </h1>
             </div>
-            <div className="flex items-center gap-2  w-2xl max-w-md">
+            <div className="flex items-center gap-2 w-2xl pl-2 max-w-md">
               <input
                 className="flex-1 h-8 w-2 md:w-full px-2 md:h-10 md:px-4 rounded-2xl text-neutral-200 bg-gray-800/70 border border-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 placeholder="Search movies..."

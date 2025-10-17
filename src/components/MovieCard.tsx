@@ -172,17 +172,17 @@ const MovieBox: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 overflow-x-hidden">
       <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-3 py-1.5 md:px-6 md:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Film className="w-10 h-10 text-neutral-200 " />
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-400 bg-clip-text text-transparent">
+              <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-400 bg-clip-text text-transparent">
                 MovieBox
               </h1>
             </div>
-            <div className="flex items-center gap-2 w-full max-w-md">
+            <div className="flex items-center gap-2  w-2xl max-w-md">
               <input
-                className="flex-1 h-10 px-4 rounded-2xl text-neutral-200 bg-gray-800/70 border border-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="flex-1 h-8 w-2 md:w-full px-2 md:h-10 md:px-4 rounded-2xl text-neutral-200 bg-gray-800/70 border border-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 placeholder="Search movies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -190,7 +190,7 @@ const MovieBox: React.FC = () => {
               />
               <button
                 onClick={handleSearch}
-                className="inline-flex items-center justify-center rounded-2xl h-10 px-4 bg-gray-700 hover:bg-gray-600 text-neutral-100 transition-colors disabled:opacity-60"
+                className="inline-flex items-center justify-center rounded-2xl h-8 md:h-10 px-4 bg-gray-700 hover:bg-gray-600 text-neutral-100 transition-colors disabled:opacity-60"
                 disabled={isSearching}
                 aria-label="Search"
               >

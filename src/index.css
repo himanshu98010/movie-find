@@ -2,3 +2,11 @@
 #section::-webkit-scrollbar {
   display: none;
 }
+html, body, #root {
+  height: 100%;
+}
+html, body {
+  overflow-x: hidden;
+  background-color: #0f172a; /* slate-900 */
+  color-scheme: dark;
+}

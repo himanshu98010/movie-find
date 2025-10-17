@@ -170,7 +170,7 @@ const MovieBox: React.FC = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 overflow-x-hidden">
       <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
